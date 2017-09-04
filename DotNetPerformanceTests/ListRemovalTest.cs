@@ -12,7 +12,7 @@ namespace DotNetPerformanceTests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _Numbers = GenerateNumbers(200000, 1, 999) as IList<int>;
+            _Numbers = Helper.GenerateSameNumbers(200000, 1, 999) as IList<int>;
         }
 
         static IList<int> _Numbers;
@@ -31,7 +31,7 @@ namespace DotNetPerformanceTests
             var result = _Numbers.Where(_FilterRejectingNumbersOver250).ToList();
 
             sw.Stop();
-            Debug.WriteLine(sw.ElapsedMilliseconds);
+            Helper.OutputElapsedTicks(sw);
 
             // assert
             Assert.AreEqual(_ExpectedResult, result.Count);
@@ -54,21 +54,10 @@ namespace DotNetPerformanceTests
                 copyOfAll.Remove(item);
 
             sw.Stop();
-            Debug.WriteLine(sw.ElapsedMilliseconds);
+            Helper.OutputElapsedTicks(sw);
 
             // assert
             Assert.AreEqual(_ExpectedResult, copyOfAll.Count);
-        }
-
-        static IEnumerable<int> GenerateNumbers(int len, int min, int max)
-        {
-            var list = new List<int>();
-            var rnd = new Random(100);
-
-            for (var i = 0; i < len; i++)
-                list.Add(rnd.Next(min, max));
-
-            return list;
         }
     }
 }
